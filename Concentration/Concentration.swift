@@ -10,40 +10,47 @@ import Foundation
 
 class Concentration
 {
-    var cards = [Card]() {
-        didSet {
-            
+    private(set) var cards = [Card]()
+    
+    private var indexOfOneAndAnlyFaceUpCard: Int? {
+        get {
+            var foundIndex: Int?
+            for index in cards.indices {
+                if cards[index].isFaceUp {
+                    if foundIndex == nil {
+                        foundIndex = index
+                    }
+                    else {
+                        return nil
+                    }
+                }
+            }
+            return foundIndex
         }
-        
-        willSet {
-            
+        set {
+            for index in cards.indices {
+                cards[index].isFaceUp = (index == newValue)
+            }
         }
     }
     
-    var indexOfOneAndAnlyFaceUpCard: Int?
-    
     func chooseCard(at index: Int) {
+        assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index): chosen index not in the cards)")
         if !cards[index].isMatched {
-            if let matchindex = indexOfOneAndAnlyFaceUpCard, matchindex != index {
-                // check if cards match
-                if cards[matchindex].identifier == cards[index].identifier {
-                    cards[matchindex].isMatched = true
+            if let matchIndex = indexOfOneAndAnlyFaceUpCard, matchIndex != index {
+                if cards[matchIndex].identifier == cards[index].identifier {
+                    cards[matchIndex].isMatched = true
                     cards[index].isMatched = true
                 }
                 cards[index].isFaceUp = true
-                indexOfOneAndAnlyFaceUpCard = nil
             } else {
-                // either no cards or 2 cards are face up
-                for flipDownIndex in cards.indices {
-                    cards[flipDownIndex].isFaceUp = false
-                }
-                cards[index].isFaceUp = true
                 indexOfOneAndAnlyFaceUpCard = index
             }
         }
     }
     
     init(numberOfPairsOfcards: Int) {
+        assert(numberOfPairsOfcards > 0, "Concentration.init(numberOfPairsOfcards: \(numberOfPairsOfcards): you must have at least one pair of cards")
         for _ in 1...numberOfPairsOfcards {
             let card = Card()
             cards += [card, card]
