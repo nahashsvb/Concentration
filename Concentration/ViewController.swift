@@ -31,7 +31,7 @@ class ViewController: UIViewController {
         flipCountLabel.attributedText = attributedString
     }
     
-    private var emojiChoices = "👻🎃🌲🌳🌷🌹❄️ ☃️🍏🍐💩🦊"
+    private var emojiChoices = "👻🎃🌲🌳🌷🌹❄️☃️🍏🍐💩🦊"
     
     private var emoji = [Card:String]()
     
